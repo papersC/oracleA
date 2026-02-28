@@ -1,0 +1,104 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{algorithmic}[2009/08/24 v0.1 Document Style `algorithmic']
+
+\RequirePackage{ifthen}
+\RequirePackage{calc}
+
+\newboolean{ALC@noend}
+\setboolean{ALC@noend}{false}
+\DeclareOption{noend}{\setboolean{ALC@noend}{true}}
+\ProcessOptions
+
+\newcounter{ALC@line}
+\newcounter{ALC@rem}
+\newlength{\ALC@tlm}
+\setlength{\ALC@tlm}{1em}
+
+\newcommand{\algorithmicrequire}{\textbf{Require:}}
+\newcommand{\algorithmicensure}{\textbf{Ensure:}}
+\newcommand{\algorithmicend}{\textbf{end}}
+\newcommand{\algorithmicif}{\textbf{if}}
+\newcommand{\algorithmicthen}{\textbf{then}}
+\newcommand{\algorithmicelse}{\textbf{else}}
+\newcommand{\algorithmicelsif}{\algorithmicelse\ \algorithmicif}
+\newcommand{\algorithmicendif}{\algorithmicend\ \algorithmicif}
+\newcommand{\algorithmicfor}{\textbf{for}}
+\newcommand{\algorithmicforall}{\textbf{for all}}
+\newcommand{\algorithmicdo}{\textbf{do}}
+\newcommand{\algorithmicendfor}{\algorithmicend\ \algorithmicfor}
+\newcommand{\algorithmicwhile}{\textbf{while}}
+\newcommand{\algorithmicendwhile}{\algorithmicend\ \algorithmicwhile}
+\newcommand{\algorithmicloop}{\textbf{loop}}
+\newcommand{\algorithmicendloop}{\algorithmicend\ \algorithmicloop}
+\newcommand{\algorithmicrepeat}{\textbf{repeat}}
+\newcommand{\algorithmicuntil}{\textbf{until}}
+\newcommand{\algorithmicprint}{\textbf{print}}
+\newcommand{\algorithmicreturn}{\textbf{return}}
+\newcommand{\algorithmiccomment}[1]{\hfill$\triangleright$\ #1}
+
+\newcommand{\REQUIRE}{\item[\algorithmicrequire]}
+\newcommand{\ENSURE}{\item[\algorithmicensure]}
+\newcommand{\PRINT}{\algorithmicprint{} }
+\newcommand{\RETURN}{\item[]\ \algorithmicreturn{} }
+
+\newcommand{\ALC@linemark}{%
+  \refstepcounter{ALC@line}%
+  \stepcounter{ALC@rem}%
+  \ifthenelse{\equal{\value{ALC@rem}}{1}}{%
+    \setcounter{ALC@rem}{0}%
+    \makebox[1.5em][r]{\footnotesize\arabic{ALC@line}:\ }%
+  }{%
+    \makebox[1.5em][r]{\ }%
+  }%
+}
+
+\newcommand{\COMMENT}[1]{\algorithmiccomment{#1}}
+
+\newenvironment{algorithmic}[1][0]{%
+  \setcounter{ALC@line}{0}%
+  \setcounter{ALC@rem}{#1}%
+  \begin{list}{\ALC@linemark}{%
+    \setlength{\itemsep}{0pt}%
+    \setlength{\topsep}{2pt}%
+    \setlength{\parsep}{0pt}%
+    \setlength{\partopsep}{0pt}%
+    \setlength{\leftmargin}{0em}%
+    \setlength{\labelwidth}{1.5em}%
+    \setlength{\labelsep}{0.25em}%
+    \usecounter{ALC@line}%
+  }%
+  \newcommand{\STATE}{\item}%
+}{%
+  \end{list}%
+}
+
+% ALC@block is an indented sub-list
+\newenvironment{ALC@block}{%
+  \begin{list}{}{%
+    \setlength{\itemsep}{0pt}%
+    \setlength{\topsep}{0pt}%
+    \setlength{\parsep}{0pt}%
+    \setlength{\partopsep}{0pt}%
+    \setlength{\leftmargin}{\ALC@tlm}%
+  }%
+}{%
+  \end{list}%
+}
+
+\newcommand{\FOR}[1]{\item \algorithmicfor\ #1\ \algorithmicdo\begin{ALC@block}}
+\newcommand{\FORALL}[1]{\item \algorithmicforall\ #1\ \algorithmicdo\begin{ALC@block}}
+\newcommand{\ENDFOR}{\end{ALC@block}\ifthenelse{\boolean{ALC@noend}}{}{\item \algorithmicendfor}}
+
+\newcommand{\IF}[1]{\item \algorithmicif\ #1\ \algorithmicthen\begin{ALC@block}}
+\newcommand{\ELSIF}[1]{\end{ALC@block}\item \algorithmicelsif\ #1\ \algorithmicthen\begin{ALC@block}}
+\newcommand{\ELSE}{\end{ALC@block}\item \algorithmicelse\begin{ALC@block}}
+\newcommand{\ENDIF}{\end{ALC@block}\ifthenelse{\boolean{ALC@noend}}{}{\item \algorithmicendif}}
+
+\newcommand{\WHILE}[1]{\item \algorithmicwhile\ #1\ \algorithmicdo\begin{ALC@block}}
+\newcommand{\ENDWHILE}{\end{ALC@block}\ifthenelse{\boolean{ALC@noend}}{}{\item \algorithmicendwhile}}
+
+\newcommand{\LOOP}{\item \algorithmicloop\begin{ALC@block}}
+\newcommand{\ENDLOOP}{\end{ALC@block}\ifthenelse{\boolean{ALC@noend}}{}{\item \algorithmicendloop}}
+
+\newcommand{\REPEAT}{\item \algorithmicrepeat\begin{ALC@block}}
+\newcommand{\UNTIL}[1]{\end{ALC@block}\item \algorithmicuntil\ #1}
