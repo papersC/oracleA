@@ -18,6 +18,16 @@
 # PDF files
 *.pdf
 
+# LaTeX class/style/template files
+*.cls
+*.bst
+*.sty
+
+# Template images
+bullet.png
+logo.png
+notaglinelogo.png
+
 # Backup files
 *_backup.*
 *_updated.*
