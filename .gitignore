@@ -18,6 +18,10 @@
 # PDF files
 *.pdf
 
+# LaTeX source files
+*.tex
+*.bib
+
 # LaTeX class/style/template files
 *.cls
 *.bst
